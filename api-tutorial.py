@@ -49,6 +49,32 @@ async def handle_assignment(request: Request):
             "error": str(e),
             "received_data": data
         }
+    
+@app.post("/erpnext-po-submitted")
+async def handle_po_submission(request: Request):
+    try:
+        data = await request.json()
+        print("PO Submitted:", data)
+
+        # Example: Extract key info
+        po_name = data.get("name")
+        submitted_by = data.get("owner")
+        modified_on = data.get("modified")
+
+        # Your custom logic goes here (e.g., notify a team on Lark)
+
+        return {
+            "status": "success",
+            "po": po_name,
+            "submitted_by": submitted_by,
+            "timestamp": modified_on,
+            "server_time": datetime.utcnow().isoformat()
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e)
+        }
 
 @app.get("/")
 def read_root():
